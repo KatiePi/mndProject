@@ -17,8 +17,8 @@
           <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="301.0">
                <children>
                    <Label layoutX="29.0" layoutY="42.0" text="Add network structure" />
-                   <Button id="addButton" layoutX="29.0" layoutY="542.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="66.0" text="Add" onAction="#add"/>
-                   <TextArea id="graphInput" layoutX="26.0" layoutY="69.0" prefHeight="459.0" prefWidth="249.0" />
+                   <Button fx:id="addButton" layoutX="29.0" layoutY="542.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="66.0" text="Add" onAction="#add"/>
+                   <TextArea fx:id="graphInput" layoutX="26.0" layoutY="69.0" prefHeight="459.0" prefWidth="249.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="218.0" fx:id="anchorPaneDrawGraph">
@@ -28,9 +28,9 @@
                    <Label layoutX="44.0" layoutY="48.0" text="The shortest path" />
                    <Label layoutX="45.0" layoutY="203.0" text="The longest path" />
                    <Label layoutX="44.0" layoutY="363.0" text="Critical nodes" />
-                   <TextArea id="theShortestPathOutput" layoutX="45.0" layoutY="75.0" prefHeight="82.0" prefWidth="368.0" />
-                   <TextArea id="theLongestPathOutput" layoutX="44.0" layoutY="227.0" prefHeight="82.0" prefWidth="368.0" />
-                   <TextArea id="criticalNodesOutput" layoutX="44.0" layoutY="392.0" prefHeight="82.0" prefWidth="368.0" />
+                   <TextArea fx:id="theShortestPathOutput" layoutX="45.0" layoutY="75.0" prefHeight="82.0" prefWidth="368.0" />
+                   <TextArea fx:id="theLongestPathOutput" layoutX="44.0" layoutY="227.0" prefHeight="82.0" prefWidth="368.0" />
+                   <TextArea fx:id="criticalNodesOutput" layoutX="44.0" layoutY="392.0" prefHeight="82.0" prefWidth="368.0" />
                </children>
             </AnchorPane>
         </items>
