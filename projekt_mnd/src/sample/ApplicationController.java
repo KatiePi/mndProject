@@ -8,9 +8,7 @@ import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ApplicationController {
 
@@ -23,7 +21,7 @@ public class ApplicationController {
     private Graph graph;
     private GraphProcesser gp;
     private ArrayList<GraphNode> nodes = new ArrayList<GraphNode>();
-
+    ArrayList<GraphNode> nodeList = new ArrayList<GraphNode>();
 
     @FXML
     protected void add() {
@@ -97,14 +95,11 @@ public class ApplicationController {
             node.setAttribute("ui.label", node.getId());
         }
 
-        System.out.println("nodesHelper :: " + nodesHelper.size());
-        ArrayList<GraphNode> nodeList = new ArrayList<GraphNode>(nodesHelper.values());
-        System.out.println(nodeList.get(0).getName());
+        nodeList = new ArrayList<GraphNode>(nodesHelper.values());
         gp = new GraphProcesser();
         GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
 
         criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,nodeList.get(nodeList.size()-1));
-        System.out.println(criticalNodes.size() + " criticalNodes");
         for(GraphNode n : nodeList.get(nodeList.size()-1).getShortestPath()) {
             shortestPath += n.getName() + " ";
         }
@@ -117,6 +112,7 @@ public class ApplicationController {
         criticalNodesOutput.setText(criticalNodesText);
 
     }
+
 
 
 }
