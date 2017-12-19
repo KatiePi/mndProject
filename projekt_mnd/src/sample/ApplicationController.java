@@ -1,4 +1,3 @@
-package sample;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -9,13 +8,22 @@ import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class ApplicationController {
 
     //TODO validate if weight is numeric
     @FXML private TextArea graphInput;
     @FXML private SwingNode graphNode;
+    @FXML private TextArea theShortestPathOutput;
+    @FXML private  TextArea criticalNodesOutput;
+
     private Graph graph;
+    private GraphProcesser gp;
+    private ArrayList<GraphNode> nodes = new ArrayList<GraphNode>();
+
 
     @FXML
     protected void add() {
@@ -67,15 +75,48 @@ public class ApplicationController {
     }
 
     public void createGraphFromSingleRows(String[] rows) {
+        String shortestPath = "";
+        String longestPath = "";
+        String criticalNodesText = "";
+        ArrayList<GraphNode> criticalNodes;
+        Map<String, GraphNode> nodesHelper = new LinkedHashMap<String, GraphNode>();
         for ( String row : rows) {
             String[] letters = row.split(" ");
             this.graph.addEdge( row, letters[0], letters[2], true);
             graph.getEdge(row).setAttribute("weight", Integer.parseInt(letters[1]));
             graph.getEdge(row).setAttribute("ui.label", Integer.parseInt(letters[1]));
-        }
 
+            nodesHelper.put(letters[0], new GraphNode(letters[0]));
+            nodesHelper.put(letters[2], new GraphNode(letters[2]));
+        }
+        for ( String row : rows) {
+            String[] letters = row.split(" ");
+            nodesHelper.get(letters[0]).addNeighbour(nodesHelper.get(letters[2]),Integer.parseInt(letters[1]));
+        }
         for (Node node : graph.getNodeSet()) {
             node.setAttribute("ui.label", node.getId());
         }
+
+        System.out.println("nodesHelper :: " + nodesHelper.size());
+        ArrayList<GraphNode> nodeList = new ArrayList<GraphNode>(nodesHelper.values());
+        System.out.println(nodeList.get(0).getName());
+        gp = new GraphProcesser();
+        GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
+
+        criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,nodeList.get(nodeList.size()-1));
+        System.out.println(criticalNodes.size() + " criticalNodes");
+        for(GraphNode n : nodeList.get(nodeList.size()-1).getShortestPath()) {
+            shortestPath += n.getName() + " ";
+        }
+        shortestPath += nodeList.get(nodeList.size()-1).getName();
+        for(GraphNode n : criticalNodes) {
+            criticalNodesText+=n.getName() + " ";
+        }
+        if(criticalNodesText == "") criticalNodesText = "No critical nodes";
+        theShortestPathOutput.setText(shortestPath);
+        criticalNodesOutput.setText(criticalNodesText);
+
     }
+
+
 }

@@ -3,10 +3,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Node {
+public class GraphNode {
 
     private String name;
-    private List<Node> shortestPath = new LinkedList<>();
+    private List<GraphNode> shortestPath = new LinkedList<>();
     private Integer distance = Integer.MAX_VALUE;
 
     public boolean isVisited() {
@@ -19,13 +19,13 @@ public class Node {
 
     private boolean visited = false;
 
-    private Map<Node, Integer> neighbours = new HashMap<>();
+    private Map<GraphNode, Integer> neighbours = new HashMap<>();
 
-    public Node(String name) {
+    public GraphNode(String name) {
         this.name = name;
     }
 
-    public void addNeighbour(Node destination, int distance) {
+    public void addNeighbour(GraphNode destination, int distance) {
         neighbours.put(destination, distance);
     }
 
@@ -37,15 +37,15 @@ public class Node {
         return distance;
     }
 
-    public void setShortestPath(LinkedList<Node> shortestPath) {
+    public void setShortestPath(LinkedList<GraphNode> shortestPath) {
         this.shortestPath = shortestPath;
     }
 
-    public List<Node> getShortestPath() {
+    public List<GraphNode> getShortestPath() {
         return shortestPath;
     }
 
-    public Map<Node,Integer> getNeighbours() {
+    public Map<GraphNode,Integer> getNeighbours() {
         return neighbours;
     }
 
@@ -57,7 +57,7 @@ public class Node {
         this.name = name;
     }
 
-    public void setShortestPath(List<Node> shortestPath) {
+    public void setShortestPath(List<GraphNode> shortestPath) {
         this.shortestPath = shortestPath;
     }
 
@@ -65,7 +65,7 @@ public class Node {
         this.distance = distance;
     }
 
-    public void setNeighbours(Map<Node, Integer> neighbours) {
+    public void setNeighbours(Map<GraphNode, Integer> neighbours) {
         this.neighbours = neighbours;
     }
 }

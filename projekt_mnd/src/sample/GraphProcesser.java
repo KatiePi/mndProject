@@ -4,20 +4,20 @@ public class GraphProcesser {
 
     private boolean isFound;
 
-    public static void calculateShortestPathInDirectedGraph(Node source) {
+    public static void calculateShortestPathInDirectedGraph(GraphNode source) {
         source.setDistance(0);
 
-        Set<Node> settledNodes = new HashSet<>();
-        Set<Node> unsettledNodes = new HashSet<>();
+        Set<GraphNode> settledNodes = new HashSet<>();
+        Set<GraphNode> unsettledNodes = new HashSet<>();
 
         unsettledNodes.add(source);
 
         while (unsettledNodes.size() != 0) {
-            Node currentNode = getLowestDistanceNode(unsettledNodes);
+            GraphNode currentNode = getLowestDistanceNode(unsettledNodes);
             unsettledNodes.remove(currentNode);
-            for (Map.Entry< Node, Integer> adjacencyPair:
+            for (Map.Entry<GraphNode, Integer> adjacencyPair:
                     currentNode.getNeighbours().entrySet()) {
-                Node adjacentNode = adjacencyPair.getKey();
+                GraphNode adjacentNode = adjacencyPair.getKey();
                 Integer edgeWeight = adjacencyPair.getValue();
                 if (!settledNodes.contains(adjacentNode)) {
                     calculateMinimumDistance(adjacentNode, edgeWeight, currentNode);
@@ -28,10 +28,10 @@ public class GraphProcesser {
         }
     }
 
-    private static Node getLowestDistanceNode(Set <Node> unsettledNodes) {
-        Node lowestDistanceNode = null;
+    private static GraphNode getLowestDistanceNode(Set <GraphNode> unsettledNodes) {
+        GraphNode lowestDistanceNode = null;
         int lowestDistance = Integer.MAX_VALUE;
-        for (Node node: unsettledNodes) {
+        for (GraphNode node: unsettledNodes) {
             int nodeDistance = node.getDistance();
             if (nodeDistance < lowestDistance) {
                 lowestDistance = nodeDistance;
@@ -41,20 +41,20 @@ public class GraphProcesser {
         return lowestDistanceNode;
     }
 
-    private static void calculateMinimumDistance(Node evaluationNode, int edgeWeight, Node sourceNode) {
+    private static void calculateMinimumDistance(GraphNode evaluationNode, int edgeWeight, GraphNode sourceNode) {
         int sourceDistance = sourceNode.getDistance();
         if (sourceDistance + edgeWeight < evaluationNode.getDistance()) {
             evaluationNode.setDistance(sourceDistance + edgeWeight);
-            LinkedList<Node> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
+            LinkedList<GraphNode> shortestPath = new LinkedList<>(sourceNode.getShortestPath());
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
         }
     }
 
-    public ArrayList<Node> findCriticalNodes(Node source, ArrayList<Node> allNodes, Node target) {
-        ArrayList<Node> criticalNodes = new ArrayList<>();
+    public ArrayList<GraphNode> findCriticalNodes(GraphNode source, ArrayList<GraphNode> allNodes, GraphNode target) {
+        ArrayList<GraphNode> criticalNodes = new ArrayList<>();
         try {
-            for(Node node: allNodes.subList(1,allNodes.size()-1)) {
+            for(GraphNode node: allNodes.subList(1,allNodes.size()-1)) {
                 isFound = false;
                 findLastNode(source,node,target);
                 if(!isFound)criticalNodes.add(node);
@@ -67,8 +67,8 @@ public class GraphProcesser {
 
     }
 
-    public void findLastNode(Node source, Node deletedNode, Node target) {
-        for(Map.Entry<Node, Integer> nodeIntegerEntry : source.getNeighbours().entrySet()) {
+    public void findLastNode(GraphNode source, GraphNode deletedNode, GraphNode target) {
+        for(Map.Entry<GraphNode, Integer> nodeIntegerEntry : source.getNeighbours().entrySet()) {
             if(nodeIntegerEntry.getKey() != deletedNode) {
                 if(nodeIntegerEntry.getKey() == target) {
                     isFound = true;
