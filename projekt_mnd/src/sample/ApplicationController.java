@@ -94,27 +94,18 @@ public class ApplicationController {
             node.setAttribute("ui.label", node.getId());
         }
 
-        for (GraphNode node : nodesHelper.values()) {
-            System.out.println("NODES HELPER :: " + node.getName());
-        }
         nodeList = new ArrayList<GraphNode>(nodesHelper.values());
         gp = new GraphProcesser();
         GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
-
-        for(GraphNode node: nodeList) {
-            System.out.print(node.getName() + " ::: ");
-            for(Map.Entry<GraphNode, Integer> nodeIntegerEntry: node.getNeighbours().entrySet()) {
-                System.out.print(nodeIntegerEntry.getKey().getName() + ", ");
-            }
-            System.out.print("\n");
-        }
         criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,GraphProcesser.lastNode(nodeList));
         for(GraphNode n : GraphProcesser.lastNode(nodeList).getShortestPath()) {
             shortestPath += n.getName() + " ";
         }
         shortestPath += GraphProcesser.lastNode(nodeList).getName();
         for(GraphNode n : criticalNodes) {
-            if(n != GraphProcesser.lastNode(nodeList))criticalNodesText+=n.getName() + " ";
+            if(n != GraphProcesser.lastNode(nodeList) && n.getNeighbours().size() == 1)criticalNodesText+=n.getName()
+                    + " " + n.getNeighbours().entrySet().iterator().next().getValue() + " "
+                    + n.getNeighbours().entrySet().iterator().next().getKey().getName() + ", ";
         }
         if(criticalNodesText == "") criticalNodesText = "No critical nodes";
         theShortestPathOutput.setText(shortestPath);
