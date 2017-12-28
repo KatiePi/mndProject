@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GraphProcesser {
@@ -54,12 +55,12 @@ public class GraphProcesser {
     public ArrayList<GraphNode> findCriticalNodes(GraphNode source, ArrayList<GraphNode> allNodes, GraphNode target) {
         ArrayList<GraphNode> criticalNodes = new ArrayList<>();
         try {
-            for(GraphNode node: allNodes.subList(1,allNodes.size()-1)) {
+            for(GraphNode node: allNodes.subList(1,allNodes.size())) {
+                System.out.println("IS NODE CRITICAL? :: " + node.getName());
                 isFound = false;
                 findLastNode(source,node,target);
                 if(!isFound)criticalNodes.add(node);
             }
-            System.out.println("CRITICAL NODES IN GRAPH: ");
             return criticalNodes;
         } catch (StackOverflowError e) {
             return null;
@@ -68,14 +69,28 @@ public class GraphProcesser {
     }
 
     public void findLastNode(GraphNode source, GraphNode deletedNode, GraphNode target) {
+        System.out.println("   node :: " + source.getName());
         for(Map.Entry<GraphNode, Integer> nodeIntegerEntry : source.getNeighbours().entrySet()) {
+            System.out.println( "     " + source.getName() + " neighbour :: " + nodeIntegerEntry.getKey().getName());
             if(nodeIntegerEntry.getKey() != deletedNode) {
                 if(nodeIntegerEntry.getKey() == target) {
                     isFound = true;
+                    System.out.println("LAST NODE FOUND!");
+                    break;
                 } else {
                     findLastNode(nodeIntegerEntry.getKey(), deletedNode,target);
                 }
             }
         }
     }
+
+    public static GraphNode lastNode(ArrayList<GraphNode> allNodes) {
+        for(GraphNode node: allNodes) {
+            if(node.getNeighbours().entrySet().size() == 0) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 }

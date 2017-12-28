@@ -52,7 +52,6 @@ public class ApplicationController {
         this.graph.addAttribute("ui.quality");
         this.graph.addAttribute("ui.antialias");
 
-        System.out.println("The button was clicked!");
         String[] rows = splitInputIntoRows();
         createGraphFromSingleRows(rows);
 
@@ -77,7 +76,7 @@ public class ApplicationController {
         String longestPath = "";
         String criticalNodesText = "";
         ArrayList<GraphNode> criticalNodes;
-        Map<String, GraphNode> nodesHelper = new LinkedHashMap<String, GraphNode>();
+        Map<String, GraphNode> nodesHelper = new TreeMap<String, GraphNode>();
         for ( String row : rows) {
             String[] letters = row.split(" ");
             this.graph.addEdge( row, letters[0], letters[2], true);
@@ -87,7 +86,7 @@ public class ApplicationController {
             nodesHelper.put(letters[0], new GraphNode(letters[0]));
             nodesHelper.put(letters[2], new GraphNode(letters[2]));
         }
-        for ( String row : rows) {
+        for (String row : rows) {
             String[] letters = row.split(" ");
             nodesHelper.get(letters[0]).addNeighbour(nodesHelper.get(letters[2]),Integer.parseInt(letters[1]));
         }
@@ -95,17 +94,27 @@ public class ApplicationController {
             node.setAttribute("ui.label", node.getId());
         }
 
+        for (GraphNode node : nodesHelper.values()) {
+            System.out.println("NODES HELPER :: " + node.getName());
+        }
         nodeList = new ArrayList<GraphNode>(nodesHelper.values());
         gp = new GraphProcesser();
         GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
 
-        criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,nodeList.get(nodeList.size()-1));
-        for(GraphNode n : nodeList.get(nodeList.size()-1).getShortestPath()) {
+        for(GraphNode node: nodeList) {
+            System.out.print(node.getName() + " ::: ");
+            for(Map.Entry<GraphNode, Integer> nodeIntegerEntry: node.getNeighbours().entrySet()) {
+                System.out.print(nodeIntegerEntry.getKey().getName() + ", ");
+            }
+            System.out.print("\n");
+        }
+        criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,GraphProcesser.lastNode(nodeList));
+        for(GraphNode n : GraphProcesser.lastNode(nodeList).getShortestPath()) {
             shortestPath += n.getName() + " ";
         }
-        shortestPath += nodeList.get(nodeList.size()-1).getName();
+        shortestPath += GraphProcesser.lastNode(nodeList).getName();
         for(GraphNode n : criticalNodes) {
-            criticalNodesText+=n.getName() + " ";
+            if(n != GraphProcesser.lastNode(nodeList))criticalNodesText+=n.getName() + " ";
         }
         if(criticalNodesText == "") criticalNodesText = "No critical nodes";
         theShortestPathOutput.setText(shortestPath);
