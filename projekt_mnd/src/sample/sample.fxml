@@ -14,18 +14,23 @@
                <children>
                    <Label layoutX="29.0" layoutY="42.0" text="Add network structure" />
                    <TextArea fx:id="graphInput" layoutX="26.0" layoutY="69.0" prefHeight="150.0" prefWidth="249.0" />
-                   <Button fx:id="addButton" layoutX="29.0" layoutY="220.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="66.0" text="Add" onAction="#add"/>
-                   <SwingNode fx:id="graphNode" layoutX="29.0" layoutY="275.0" />
+                   <Button fx:id="addButton" layoutX="28.0" layoutY="307.0" mnemonicParsing="false" onAction="#add" prefHeight="25.0" prefWidth="66.0" text="Add" />
+                   <Label layoutX="26.0" layoutY="226.0" text="Add necessary activities" />
+                   <TextArea fx:id="necessaryNodes" layoutX="28.0" layoutY="250.0" prefHeight="50.0" prefWidth="249.0" />
+                   <SwingNode fx:id="graphNode" layoutX="29.0" layoutY="350.0" />
+                   <!--<SwingNode fx:id="graphNode" layoutX="29.0" layoutY="275.0" />-->
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="598.0" prefWidth="218.0" fx:id="anchorPaneDrawGraph">
                <children>
                    <Label layoutX="44.0" layoutY="48.0" text="The shortest path" />
-                   <Label layoutX="45.0" layoutY="203.0" text="The longest path" />
-                   <Label layoutX="44.0" layoutY="363.0" text="Critical activities"
+                   <!--<Label layoutX="45.0" layoutY="203.0" text="The longest path" />
+                   <Label layoutX="44.0" layoutY="363.0" text="Critical activities" />-->
+                   <Label layoutX="45.0" layoutY="203.0" text="Critical activities" />
                    <TextArea fx:id="theShortestPathOutput" layoutX="45.0" layoutY="75.0" prefHeight="82.0" prefWidth="368.0" />
-                   <TextArea fx:id="theLongestPathOutput" layoutX="44.0" layoutY="227.0" prefHeight="82.0" prefWidth="368.0" />
-                   <TextArea fx:id="criticalNodesOutput" layoutX="44.0" layoutY="392.0" prefHeight="82.0" prefWidth="368.0" />
+                   <!-- <TextArea fx:id="theLongestPathOutput" layoutX="44.0" layoutY="227.0" prefHeight="82.0" prefWidth="368.0" />
+                   <TextArea fx:id="criticalNodesOutput" layoutX="44.0" layoutY="392.0" prefHeight="82.0" prefWidth="368.0" /> -->
+                   <TextArea fx:id="criticalNodesOutput" layoutX="44.0" layoutY="227.0" prefHeight="82.0" prefWidth="368.0" />
                </children>
             </AnchorPane>
         </items>
