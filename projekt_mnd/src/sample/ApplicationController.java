@@ -1,4 +1,3 @@
-package sample;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -7,6 +6,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
+import sample.GraphNode;
 
 import java.awt.*;
 import java.util.*;
@@ -113,6 +113,11 @@ public class ApplicationController {
         if(criticalNodesText == "") criticalNodesText = "No critical nodes";
         theShortestPathOutput.setText(shortestPath);
         criticalNodesOutput.setText(criticalNodesText);
+
+        //CHECK IF GRAPH IS ACYCLIC
+
+        if(gp.graphIsAcyclic(nodeList)) System.out.println("GRAPH IS ACYCLIC");
+        else System.out.println("GRAPH IS NOT ACYCLIC");
 
     }
 }
