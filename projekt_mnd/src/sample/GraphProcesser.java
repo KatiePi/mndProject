@@ -1,4 +1,6 @@
-package sample;
+import sample.GraphNode;
+
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class GraphProcesser {
@@ -109,4 +111,15 @@ public class GraphProcesser {
         }
        return firstNodeInList.get(0);
     }
+
+    public boolean graphIsAcyclic(ArrayList<GraphNode> allNodes) {
+        isFound = false;
+        for(GraphNode node : allNodes) {
+            findLastNode(node, null, node);
+            if(isFound) return true;
+        }
+        return false;
+    }
+
+
 }
