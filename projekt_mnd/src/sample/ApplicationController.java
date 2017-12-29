@@ -95,6 +95,8 @@ public class ApplicationController {
         }
 
         nodeList = new ArrayList<GraphNode>(nodesHelper.values());
+
+        GraphNode source = GraphProcesser.firstNode(nodeList);
         gp = new GraphProcesser();
         GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
         criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,GraphProcesser.lastNode(nodeList));

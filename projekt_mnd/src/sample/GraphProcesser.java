@@ -55,8 +55,10 @@ public class GraphProcesser {
     public ArrayList<GraphNode> findCriticalNodes(GraphNode source, ArrayList<GraphNode> allNodes, GraphNode target) {
         ArrayList<GraphNode> criticalNodes = new ArrayList<>();
         try {
-            for(GraphNode node: allNodes.subList(1,allNodes.size())) {
-                System.out.println("IS NODE CRITICAL? :: " + node.getName());
+            if(source.getNeighbours().entrySet().size() == 1) {
+                criticalNodes.add(source);
+            }
+            for(GraphNode node: allNodes) {
                 isFound = false;
                 findLastNode(source,node,target);
                 if(!isFound)criticalNodes.add(node);
@@ -69,13 +71,10 @@ public class GraphProcesser {
     }
 
     public void findLastNode(GraphNode source, GraphNode deletedNode, GraphNode target) {
-        System.out.println("   node :: " + source.getName());
         for(Map.Entry<GraphNode, Integer> nodeIntegerEntry : source.getNeighbours().entrySet()) {
-            System.out.println( "     " + source.getName() + " neighbour :: " + nodeIntegerEntry.getKey().getName());
             if(nodeIntegerEntry.getKey() != deletedNode) {
                 if(nodeIntegerEntry.getKey() == target) {
                     isFound = true;
-                    System.out.println("LAST NODE FOUND!");
                     break;
                 } else {
                     findLastNode(nodeIntegerEntry.getKey(), deletedNode,target);
@@ -92,5 +91,26 @@ public class GraphProcesser {
         }
         return null;
     }
+
+    public static GraphNode firstNode(ArrayList<GraphNode> allNodes) {
+        ArrayList<GraphNode> firstNodeInList = allNodes;
+        ArrayList<GraphNode> nodesToRemove = new ArrayList<>();
+
+        for(GraphNode node: allNodes) {
+            for(GraphNode nodeNeighbouring: allNodes) {
+                if(node != nodeNeighbouring) {
+                    for(Map.Entry<GraphNode, Integer> nodeIntegerEntry : nodeNeighbouring.getNeighbours().entrySet()) {
+                        if(nodeIntegerEntry.getKey() == node){
+                            nodesToRemove.add(node);
+                        }
+                    }
+                }
+            }
+        }
+
+       return firstNodeInList.get(0);
+
+    }
+
 
 }
