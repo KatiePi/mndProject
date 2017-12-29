@@ -1,3 +1,4 @@
+package sample;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
@@ -114,7 +115,4 @@ public class ApplicationController {
         criticalNodesOutput.setText(criticalNodesText);
 
     }
-
-
-
 }

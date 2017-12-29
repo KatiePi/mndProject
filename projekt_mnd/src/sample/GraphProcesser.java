@@ -1,4 +1,4 @@
-import java.lang.reflect.Array;
+package sample;
 import java.util.*;
 
 public class GraphProcesser {
@@ -108,8 +108,5 @@ public class GraphProcesser {
             }
         }
        return firstNodeInList.get(0);
-
     }
-
-
 }
