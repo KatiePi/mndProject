@@ -107,7 +107,6 @@ public class GraphProcesser {
                 }
             }
         }
-
        return firstNodeInList.get(0);
 
     }
