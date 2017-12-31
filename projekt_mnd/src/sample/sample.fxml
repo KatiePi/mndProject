@@ -18,6 +18,7 @@
                    <Label layoutX="26.0" layoutY="226.0" text="Add necessary activities" />
                    <TextArea fx:id="necessaryNodes" layoutX="28.0" layoutY="250.0" prefHeight="50.0" prefWidth="249.0" />
                    <SwingNode fx:id="graphNode" layoutX="29.0" layoutY="350.0" />
+                   <Label fx:id="syntaxErrorLabel" layoutX="29.0" layoutY="350.0" />
                    <!--<SwingNode fx:id="graphNode" layoutX="29.0" layoutY="275.0" />-->
                </children>
             </AnchorPane>

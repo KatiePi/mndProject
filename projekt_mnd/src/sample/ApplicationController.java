@@ -1,15 +1,18 @@
+package sample;
 import javafx.embed.swing.SwingNode;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 import org.graphstream.ui.swingViewer.View;
 import org.graphstream.ui.swingViewer.Viewer;
-import sample.GraphNode;
 
 import java.awt.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ApplicationController {
 
@@ -17,7 +20,8 @@ public class ApplicationController {
     @FXML private TextArea graphInput;
     @FXML private SwingNode graphNode;
     @FXML private TextArea theShortestPathOutput;
-    @FXML private  TextArea criticalNodesOutput;
+    @FXML private TextArea criticalNodesOutput;
+    @FXML private Label syntaxErrorLabel;
 
     private Graph graph;
     private GraphProcesser gp;
@@ -38,7 +42,7 @@ public class ApplicationController {
                         "text-color: white; " +
                         "text-style: bold-italic; " +
                         "text-offset: 5px, 0px;" +
-                        "fill-color: red; " +
+                        "fill-color: black; " +
                         "size: 10px, 10px;" +
                     "}" +
                     "edge { " +
@@ -54,16 +58,21 @@ public class ApplicationController {
         this.graph.addAttribute("ui.antialias");
 
         String[] rows = splitInputIntoRows();
-        createGraphFromSingleRows(rows);
-
-        graphNode.setContent(null);
-        Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
-        viewer.enableAutoLayout();
-        View view = viewer.addDefaultView(false);
-        view.setMinimumSize(new Dimension(249, 200));
-        graphNode.setContent(view);
-
-        //here create object which caltulate the shortest/longest paths etc - as an argument get graph
+        if(areRowsValidated(rows)) {
+            syntaxErrorLabel.setText("");
+            graphNode.setVisible(true);
+            createGraphFromSingleRows(rows);
+            graphNode.setContent(null);
+            Viewer viewer = new Viewer(graph, Viewer.ThreadingModel.GRAPH_IN_SWING_THREAD);
+            viewer.enableAutoLayout();
+            View view = viewer.addDefaultView(false);
+            view.setMinimumSize(new Dimension(249, 200));
+            graphNode.setContent(view);
+        }
+        else {
+            graphNode.setVisible(false);
+            syntaxErrorLabel.setText("Wrong syntax!");
+        }
     }
 
     public String[] splitInputIntoRows() {
@@ -102,22 +111,50 @@ public class ApplicationController {
         GraphProcesser.calculateShortestPathInDirectedGraph(nodeList.get(0));
         criticalNodes = gp.findCriticalNodes(nodeList.get(0),nodeList,GraphProcesser.lastNode(nodeList));
         for(GraphNode n : GraphProcesser.lastNode(nodeList).getShortestPath()) {
+            graph.getNode(n.getName()).setAttribute("ui.style",
+                    "fill-color: green; " );
             shortestPath += n.getName() + " ";
         }
         shortestPath += GraphProcesser.lastNode(nodeList).getName();
+        graph.getNode(GraphProcesser.lastNode(nodeList).getName()).setAttribute("ui.style",
+                "fill-color: green; " );
+
         for(GraphNode n : criticalNodes) {
-            if(n != GraphProcesser.lastNode(nodeList) && n.getNeighbours().size() == 1)criticalNodesText+=n.getName()
-                    + " " + n.getNeighbours().entrySet().iterator().next().getValue() + " "
-                    + n.getNeighbours().entrySet().iterator().next().getKey().getName() + ", ";
+            if(n != GraphProcesser.lastNode(nodeList) && n.getNeighbours().size() == 1) {
+                String nextCriticalNode = n.getName()
+                        + " " + n.getNeighbours().entrySet().iterator().next().getValue() + " "
+                        + n.getNeighbours().entrySet().iterator().next().getKey().getName();
+                criticalNodesText+=nextCriticalNode + ", ";
+
+                graph.getEdge(nextCriticalNode).setAttribute("ui.style",
+                        "text-background-color: red; " );
+            }
         }
         if(criticalNodesText == "") criticalNodesText = "No critical nodes";
         theShortestPathOutput.setText(shortestPath);
         criticalNodesOutput.setText(criticalNodesText);
+    }
 
-        //CHECK IF GRAPH IS ACYCLIC
+    public boolean areRowsValidated(String[] rows) {
+        boolean validated = true;
+        Pattern letterPattern = Pattern.compile("[a-zA-Z]*");
+        Pattern numberPattern = Pattern.compile("[0-9]*");
+        Matcher nodeFrom, edgeWeight, nodeTo;
 
-        if(gp.graphIsAcyclic(nodeList)) System.out.println("GRAPH IS ACYCLIC");
-        else System.out.println("GRAPH IS NOT ACYCLIC");
-
+        for ( String row : rows) {
+            String[] letters = row.split(" ");
+            if(letters.length != 3)
+                return validated = false;
+            nodeFrom = letterPattern.matcher(letters[0]);
+            boolean nodeFromIsValidated = nodeFrom.matches();
+            edgeWeight = numberPattern.matcher(letters[1]);
+            boolean edgeWeightIsValidated = edgeWeight.matches();
+            nodeTo = letterPattern.matcher(letters[2]);
+            boolean nodeToIsValidated = nodeTo.matches();
+            if(!(nodeFromIsValidated && edgeWeightIsValidated && nodeToIsValidated)) {
+                return validated = false;
+            }
+        }
+        return validated;
     }
 }
