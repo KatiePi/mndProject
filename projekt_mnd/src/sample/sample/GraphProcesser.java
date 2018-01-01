@@ -1,6 +1,6 @@
-import sample.GraphNode;
+package sample;
+import javafx.scene.control.TextArea;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class GraphProcesser {
@@ -112,13 +112,62 @@ public class GraphProcesser {
        return firstNodeInList.get(0);
     }
 
-    public boolean graphIsAcyclic(ArrayList<GraphNode> allNodes) {
+    public boolean graphAcyclic(ArrayList<GraphNode> allNodes) {
         isFound = false;
-        for(GraphNode node : allNodes) {
-            findLastNode(node, null, node);
-            if(isFound) return true;
+        try {
+            for(GraphNode node : allNodes) {
+                findLastNode(node, null, node);
+                if(isFound) return false;
+            }
+        } catch (StackOverflowError soe) {
+            return false;
         }
-        return false;
+
+        return true;
+    }
+
+    public static boolean validateNecessaryActivitiesTextField(TextArea text, ArrayList<GraphNode> allNodes) {
+        String[] rows = text.getText().split("\n");
+        String[] letters;
+        if(ApplicationController.areRowsValidated(rows)) {
+             boolean nodesMatched = false;
+             for(String row: rows) {
+                  nodesMatched = false;
+                  for(GraphNode node: allNodes) {
+                      letters  = row.split(" ");
+                      if(Objects.equals(letters[0], node.getName())) {
+                          nodesMatched = true;
+                          for(Map.Entry<GraphNode, Integer> nodeIntegerEntry: node.getNeighbours().entrySet()) {
+                              if(!Objects.equals(nodeIntegerEntry.getKey().getName(), letters[2]) || nodeIntegerEntry.getValue() != Integer.parseInt(letters[1])) return false;
+                          }
+                      }
+                  }
+                  if(!nodesMatched) return false;
+             }
+        } else {
+            return false;
+        }
+        return true;
+
+    }
+
+    public static LinkedHashMap<GraphNode, GraphNode> getListOfNecessaryNodes(TextArea text, ArrayList<GraphNode> allNodes) {
+        LinkedHashMap<GraphNode, GraphNode> returnMap = new LinkedHashMap<>();
+        String[] rows = text.getText().split("\n");
+        String[] letters;
+        for(String row: rows) {
+            letters  = row.split(" ");
+            for(GraphNode node: allNodes) {
+                if(Objects.equals(letters[0], node.getName())){
+                    for(Map.Entry<GraphNode, Integer> nodeIntegerEntry : node.getNeighbours().entrySet()) {
+                        if(Objects.equals(letters[2], nodeIntegerEntry.getKey().getName())) {
+                            returnMap.put(node, nodeIntegerEntry.getKey());
+                        }
+                    }
+                }
+            }
+        }
+        return returnMap;
     }
 
 
