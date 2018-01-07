@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class GraphNode {
+public class GraphNode implements Comparable, Cloneable {
 
     private String name;
     private List<GraphNode> shortestPath = new LinkedList<>();
@@ -46,6 +46,12 @@ public class GraphNode {
         return shortestPath;
     }
 
+    public void clearShortestPath() {
+        this.shortestPath.clear();
+    }
+
+
+
     public Map<GraphNode,Integer> getNeighbours() {
         return neighbours;
     }
@@ -69,4 +75,11 @@ public class GraphNode {
     public void setNeighbours(Map<GraphNode, Integer> neighbours) {
         this.neighbours = neighbours;
     }
+
+    @Override
+    public int compareTo(Object o) {
+        return 0;
+    }
+
+
 }
